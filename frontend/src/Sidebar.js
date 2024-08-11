@@ -17,6 +17,9 @@ const Sidebar = () => {
         <li>
           <Link to="/dashboard/user-profile" activeClassName="active">User Profile</Link>
         </li>
+        <li>
+          <Link to="/dashboard/calendar" activeClassName="active">Calendar</Link>
+        </li>
       </ul>
     </div>
   );

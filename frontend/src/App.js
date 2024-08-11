@@ -8,6 +8,7 @@ import Dashboard from './Dashboard';
 import Event from './Event';
 import EventForm from './EventForm';
 import Profile from './Profile';
+import CalendarView from './CalendarView';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="add-event" element={<Event />} />
             <Route path="view-events" element={<EventForm />} />
             <Route path="user-profile" element={<Profile />} />
+            <Route path="calendar" element={<CalendarView />} />
           </Route>
         </Routes>
     </Router>
