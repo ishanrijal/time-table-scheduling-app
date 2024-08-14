@@ -2,9 +2,33 @@ from rest_framework import serializers
 from .models import CustomUser, Instructor, Course, Classroom, Module, Lecture, Event, Notification, Conflict
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    # Include password field for write operations
+    password = serializers.CharField(write_only=True, required=True)
+
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = ['id', 'first_name', 'last_name', 'email', 'role', 'password', 'created_date', 'is_active', 'is_staff']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def create(self, validated_data):
+        # Extract password
+        password = validated_data.pop('password', None)
+        user = super().create(validated_data)
+        if password:
+            user.set_password(password)  # Hash password
+            user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        # Extract password
+        password = validated_data.pop('password', None)
+        user = super().update(instance, validated_data)
+        if password:
+            user.set_password(password)  # Hash password
+            user.save()
+        return user
 
 class InstructorSerializer(serializers.ModelSerializer):
     class Meta:
