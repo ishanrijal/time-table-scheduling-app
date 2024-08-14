@@ -84,7 +84,7 @@ class Module(models.Model):
     module_name = models.CharField(max_length=255)
     teacher = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='modules')
     room = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='modules', blank=True, null=True)
-     time_slot = models.DateTimeField(default=timezone.now)
+    time_slot = models.DateTimeField(default=timezone.now)  # Fixed the indentation here
     MODE_OF_DELIVERY_CHOICES = [
         ('online', 'Online'),
         ('physical', 'Physical')

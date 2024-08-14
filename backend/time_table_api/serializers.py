@@ -1,24 +1,10 @@
-# yourapp/serializers.py
-
 from rest_framework import serializers
-from .models import Instructor, Course, Classroom, Module, Lecture, Event, Notification
-from django.contrib.auth.models import User
+from .models import CustomUser, Instructor, Course, Classroom, Module, Lecture, Event, Notification, Conflict
 
-class UserSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'username', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
-        )
-        return user
+        model = CustomUser
+        fields = '__all__'
 
 class InstructorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -53,4 +39,9 @@ class EventSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
+        fields = '__all__'
+
+class ConflictSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Conflict
         fields = '__all__'
