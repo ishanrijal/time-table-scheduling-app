@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'time_table',  
         'USER': 'postgres',             
-        'PASSWORD': 'admin',    
+        'PASSWORD': 'root',    
         'HOST': 'localhost',             
         'PORT': '5432',                 
     }
