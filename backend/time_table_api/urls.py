@@ -1,8 +1,6 @@
 from django.urls import path
 from .views import (
     CustomUserListCreateView, CustomUserDetailView,
-    InstructorListCreateView, InstructorDetailView,
-    CourseListCreateView, CourseDetailView,
     ClassroomListCreateView, ClassroomDetailView,
     ModuleListCreateView, ModuleDetailView,
     LectureListCreateView, LectureDetailView,
@@ -15,14 +13,6 @@ urlpatterns = [
     # CustomUser URLs
     path('users/', CustomUserListCreateView.as_view(), name='user-list-create'),
     path('users/<int:pk>/', CustomUserDetailView.as_view(), name='user-detail'),
-
-    # Instructor URLs
-    path('instructors/', InstructorListCreateView.as_view(), name='instructor-list-create'),
-    path('instructors/<int:pk>/', InstructorDetailView.as_view(), name='instructor-detail'),
-
-    # Course URLs
-    path('courses/', CourseListCreateView.as_view(), name='course-list-create'),
-    path('courses/<int:pk>/', CourseDetailView.as_view(), name='course-detail'),
 
     # Classroom URLs
     path('classrooms/', ClassroomListCreateView.as_view(), name='classroom-list-create'),

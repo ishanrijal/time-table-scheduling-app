@@ -1,72 +1,43 @@
 from rest_framework import serializers
-from .models import CustomUser, Instructor, Course, Classroom, Module, Lecture, Event, Notification, Conflict
+from .models import (
+    CustomUser, Classroom, Module,
+    Lecture, Event, Notification, Conflict
+)
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
-    batch = serializers.IntegerField(required=False, allow_null=True)
-    faculty = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-
     class Meta:
         model = CustomUser
-        fields = ['id', 'first_name', 'last_name', 'email', 'role', 'password', 'created_date', 'is_active', 'is_staff', 'batch', 'faculty']
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
-
-    def create(self, validated_data):
-        # Extract password
-        password = validated_data.pop('password', None)
-        user = super().create(validated_data)
-        if password:
-            user.set_password(password)  # Hash password
-            user.save()
-        return user
-
-    def update(self, instance, validated_data):
-        # Extract password
-        password = validated_data.pop('password', None)
-        user = super().update(instance, validated_data)
-        if password:
-            user.set_password(password)  # Hash password
-            user.save()
-        return user
-
-class InstructorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Instructor
-        fields = '__all__'
-
-class CourseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Course
-        fields = '__all__'
+        fields = ['id', 'first_name', 'last_name', 'email', 'role', 'created_date', 'is_active', 'is_staff', 'batch', 'faculty']
 
 class ClassroomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
-        fields = '__all__'
+        fields = ['id', 'room_name', 'capacity', 'availability']
 
 class ModuleSerializer(serializers.ModelSerializer):
+    instructor = serializers.StringRelatedField()  # To show the instructor's name instead of the ID
+
     class Meta:
         model = Module
-        fields = '__all__'
+        fields = ['id', 'module_code', 'module_name', 'credit_hours', 'instructor', 'room', 'time_slot', 'mode_of_delivery']
 
 class LectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
-        fields = '__all__'
+        fields = ['id', 'module', 'classroom', 'start_time', 'end_time', 'day_of_week', 'batch', 'faculty']
 
 class EventSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.filter(role='instructor'))
     class Meta:
         model = Event
-        fields = '__all__'
+        fields = ['id', 'title', 'description', 'start_time', 'end_time', 'user']
 
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = '__all__'
+        fields = ['id', 'user', 'event', 'message', 'sent_at', 'read']
 
 class ConflictSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conflict
-        fields = '__all__'
+        fields = ['id', 'conflict_type', 'details', 'resolution_status']

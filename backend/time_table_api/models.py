@@ -61,24 +61,6 @@ class CustomUser(AbstractBaseUser):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-# Module Management
-class Instructor(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='instructor')
-    hire_date = models.DateField()
-
-    def __str__(self):
-        return self.user.get_full_name()
-
-class Course(models.Model):
-    course_code = models.CharField(max_length=10)
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    credits = models.IntegerField()
-    instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='courses')
-
-    def __str__(self):
-        return self.title
-
 class Classroom(models.Model):
     room_name = models.CharField(max_length=255)
     capacity = models.IntegerField()
@@ -88,8 +70,10 @@ class Classroom(models.Model):
         return f"{self.room_name} (Capacity: {self.capacity})"
 
 class Module(models.Model):
+    module_code = models.CharField(max_length=10)
     module_name = models.CharField(max_length=255)
-    teacher = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='modules')
+    credit_hours = models.IntegerField()  # New field
+    instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='modules', limit_choices_to={'role': 'instructor'})
     room = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='modules', blank=True, null=True)
     time_slot = models.DateTimeField(default=timezone.now)
     MODE_OF_DELIVERY_CHOICES = [
@@ -100,17 +84,18 @@ class Module(models.Model):
 
     def __str__(self):
         return self.module_name
-
+    
 class Lecture(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lectures')
-    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='lectures', blank=True, null=True)
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='lectures')
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='lectures', blank=True, null=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     day_of_week = models.CharField(max_length=9)
+    batch = models.IntegerField(null=True, blank=True)  # New field
+    faculty = models.CharField(max_length=255, null=True, blank=True)  # New field
 
     def __str__(self):
-        return f"{self.course.title} - {self.module.module_name}"
+        return f"{self.module.module_name} - {self.day_of_week}"
 
 class Event(models.Model):
     title = models.CharField(max_length=255)

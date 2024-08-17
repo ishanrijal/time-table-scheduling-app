@@ -1,64 +1,21 @@
 from rest_framework import generics
-from .models import CustomUser, Instructor, Course, Classroom, Module, Lecture, Event, Notification, Conflict
-from .serializers import CustomUserSerializer, InstructorSerializer, CourseSerializer, ClassroomSerializer, ModuleSerializer, LectureSerializer, EventSerializer, NotificationSerializer, ConflictSerializer
-
-from django.contrib.auth import authenticate, login as django_login
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
-
-# Login View
-class LoginView(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        email = request.data.get('email')
-        password = request.data.get('password')
-
-        user = authenticate(request, email=email, password=password)
-
-        if user is not None:
-            django_login(request, user)
-            # Generate a token or handle session if needed
-            return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+from .models import (
+    CustomUser, Classroom, Module,
+    Lecture, Event, Notification, Conflict
+)
+from .serializers import (
+    CustomUserSerializer, ClassroomSerializer, ModuleSerializer,
+    LectureSerializer, EventSerializer, NotificationSerializer, ConflictSerializer
+)
 
 # CustomUser Views
 class CustomUserListCreateView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
-    def perform_create(self, serializer):
-        # Custom action before saving the instance
-        serializer.save()
-
 class CustomUserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-
-    def perform_update(self, serializer):
-        # Custom action before saving the instance
-        serializer.save()
-
-# Instructor Views
-class InstructorListCreateView(generics.ListCreateAPIView):
-    queryset = Instructor.objects.all()
-    serializer_class = InstructorSerializer
-
-class InstructorDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Instructor.objects.all()
-    serializer_class = InstructorSerializer
-
-# Course Views
-class CourseListCreateView(generics.ListCreateAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-
-class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
 
 # Classroom Views
 class ClassroomListCreateView(generics.ListCreateAPIView):
