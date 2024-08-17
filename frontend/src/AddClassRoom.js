@@ -31,7 +31,7 @@ const AddClassRoom = () => {
   };
 
   return (
-    <form className="classroom-form" onSubmit={handleSubmit}>
+    <form className="event-form" onSubmit={handleSubmit}>
       <div>
         <label>Room Name</label>
         <input

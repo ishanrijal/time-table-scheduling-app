@@ -11,6 +11,9 @@ import Profile from './Profile';
 import CalendarView from './CalendarView';
 import LectureView from './LectureView';
 import ViewClassRoom from './ViewClassRoom';
+import AddClassRoom from './AddClassRoom';
+import ViewModules from './viewModules';
+import AddModule from './services/AddModule';
 
 
 function App() {
@@ -27,6 +30,9 @@ function App() {
             <Route path="calendar" element={<CalendarView />} />
             <Route path="add-lecture" element={<LectureView />} />
             <Route path="view-classrooms" element={<ViewClassRoom />} />
+            <Route path="add-classrooms" element={<AddClassRoom />} />
+            <Route path="view-modules" element={<ViewModules />} />
+            <Route path="add-modules" element={<AddModule />} />
           </Route>
         </Routes>
     </Router>

@@ -20,6 +20,21 @@ const Sidebar = () => {
         <li>
           <Link to="/dashboard/calendar" activeClassName="active">Calendar</Link>
         </li>
+        <li>
+          <Link to="/dashboard/add-lecture" activeClassName="active">Add Lectures</Link>
+        </li>
+        <li>
+          <Link to="/dashboard/view-classrooms" activeClassName="active">Manage Classrooms</Link>
+        </li>
+        <li>
+          <Link to="/dashboard/add-classrooms" activeClassName="active">Add Classrooms</Link>
+        </li>
+        <li>
+          <Link to="/dashboard/view-modules" activeClassName="active">Manage modules</Link>
+        </li>
+        <li>
+          <Link to="/dashboard/add-modules" activeClassName="active">Add Modules</Link>
+        </li>
       </ul>
     </div>
   );
