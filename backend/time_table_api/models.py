@@ -91,8 +91,9 @@ class Lecture(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     day_of_week = models.CharField(max_length=9)
-    batch = models.IntegerField(null=True, blank=True)  # New field
-    faculty = models.CharField(max_length=255, null=True, blank=True)  # New field
+    batch = models.IntegerField(null=True, blank=True)
+    faculty = models.CharField(max_length=255, null=True, blank=True) 
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='lectures', null=True, blank=True)
 
     def __str__(self):
         return f"{self.module.module_name} - {self.day_of_week}"

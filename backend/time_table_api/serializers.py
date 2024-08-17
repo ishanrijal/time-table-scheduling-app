@@ -22,9 +22,10 @@ class ModuleSerializer(serializers.ModelSerializer):
         fields = ['id', 'module_code', 'module_name', 'credit_hours', 'instructor', 'room', 'time_slot', 'mode_of_delivery']
 
 class LectureSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.filter(role='instructor'))
     class Meta:
         model = Lecture
-        fields = ['id', 'module', 'classroom', 'start_time', 'end_time', 'day_of_week', 'batch', 'faculty']
+        fields = ['id', 'module', 'classroom', 'start_time', 'end_time', 'day_of_week', 'batch', 'faculty','user']
 
 class EventSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.filter(role='instructor'))
