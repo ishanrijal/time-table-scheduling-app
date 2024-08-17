@@ -72,9 +72,9 @@ class Classroom(models.Model):
 class Module(models.Model):
     module_code = models.CharField(max_length=10)
     module_name = models.CharField(max_length=255)
-    credit_hours = models.IntegerField()  # New field
-    instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='modules', limit_choices_to={'role': 'instructor'})
-    room = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='modules', blank=True, null=True)
+    credit_hours = models.IntegerField()
+    instructor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='instructor', limit_choices_to={'role': 'instructor'})
+    room = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='rooms', blank=True, null=True)
     time_slot = models.DateTimeField(default=timezone.now)
     MODE_OF_DELIVERY_CHOICES = [
         ('online', 'Online'),

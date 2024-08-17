@@ -15,7 +15,8 @@ class ClassroomSerializer(serializers.ModelSerializer):
         fields = ['id', 'room_name', 'capacity', 'availability']
 
 class ModuleSerializer(serializers.ModelSerializer):
-    instructor = serializers.StringRelatedField()  # To show the instructor's name instead of the ID
+    # instructor = serializers.StringRelatedField()  # To show the instructor's name instead of the ID
+    instructor = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.filter(role='instructor'))
 
     class Meta:
         model = Module

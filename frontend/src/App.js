@@ -9,6 +9,9 @@ import Event from './Event';
 import EventForm from './EventForm';
 import Profile from './Profile';
 import CalendarView from './CalendarView';
+import LectureView from './LectureView';
+import ViewClassRoom from './ViewClassRoom';
+
 
 function App() {
   return (
@@ -22,6 +25,8 @@ function App() {
             <Route path="view-events" element={<EventForm />} />
             <Route path="user-profile" element={<Profile />} />
             <Route path="calendar" element={<CalendarView />} />
+            <Route path="add-lecture" element={<LectureView />} />
+            <Route path="view-classrooms" element={<ViewClassRoom />} />
           </Route>
         </Routes>
     </Router>
