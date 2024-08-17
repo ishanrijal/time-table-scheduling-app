@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API List</title>
+</head>
+<body>
+    <h1>API List</h1>
+    <ol>
+        <li><a href="{% url 'customuser-list' %}">User List</a></li>
+        <li><a href="{% url 'customuser-detail' pk=1 %}">User Detail (example with pk=1)</a></li>
+        <li><a href="{% url 'course-list' %}">Course List</a></li>
+        <li><a href="{% url 'course-detail' pk=1 %}">Course Detail (example with pk=1)</a></li>
+        <li><a href="{% url 'classroom-list' %}">Classroom List</a></li>
+        <li><a href="{% url 'classroom-detail' pk=1 %}">Classroom Detail (example with pk=1)</a></li>
+        <li><a href="{% url 'module-list' %}">Module List</a></li>
+        <li><a href="{% url 'module-detail' pk=1 %}">Module Detail (example with pk=1)</a></li>
+        <li><a href="{% url 'lecture-list' %}">Lecture List</a></li>
+        <li><a href="{% url 'lecture-detail' pk=1 %}">Lecture Detail (example with pk=1)</a></li>
+        <li><a href="{% url 'event-list' %}">Event List</a></li>
+        <li><a href="{% url 'event-detail' pk=1 %}">Event Detail (example with pk=1)</a></li>
+        <li><a href="{% url 'notification-list' %}">Notification List</a></li>
+        <li><a href="{% url 'notification-detail' pk=1 %}">Notification Detail (example with pk=1)</a></li>
+        <li><a href="{% url 'conflict-list' %}">Conflict List</a></li>
+        <li><a href="{% url 'conflict-detail' pk=1 %}">Conflict Detail (example with pk=1)</a></li>
+    </ol>
+</body>
+</html>
