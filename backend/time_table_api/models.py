@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils import timezone
 
-# Custom User Model
+# Custom User Manager
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name, role, password=None):
+    def create_user(self, email, first_name, last_name, role, password=None, batch=None, faculty=None):
         if not email:
             raise ValueError('Users must have an email address')
         user = self.model(
@@ -12,24 +12,30 @@ class CustomUserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             role=role,
-            created_date=timezone.now()
+            created_date=timezone.now(),
+            batch=batch,
+            faculty=faculty
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
-    def create_superuser(self, email, first_name, last_name, password=None):
+
+    def create_superuser(self, email, first_name, last_name, password=None, batch=None, faculty=None):
         user = self.create_user(
             email,
             first_name=first_name,
             last_name=last_name,
             role='admin',
-            password=password
+            password=password,
+            batch=batch,
+            faculty=faculty
         )
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self._db)
         return user
 
+# Custom User Model
 class CustomUser(AbstractBaseUser):
     ROLE_CHOICES = [
         ('admin', 'Admin'),
@@ -44,6 +50,8 @@ class CustomUser(AbstractBaseUser):
     created_date = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    batch = models.IntegerField(blank=True, null=True)  # Optional integer field
+    faculty = models.CharField(max_length=100, blank=True, null=True)  # Optional string field
 
     objects = CustomUserManager()
 
@@ -83,7 +91,7 @@ class Module(models.Model):
     module_name = models.CharField(max_length=255)
     teacher = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='modules')
     room = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='modules', blank=True, null=True)
-    time_slot = models.DateTimeField(default=timezone.now)  # Fixed the indentation here
+    time_slot = models.DateTimeField(default=timezone.now)
     MODE_OF_DELIVERY_CHOICES = [
         ('online', 'Online'),
         ('physical', 'Physical')
