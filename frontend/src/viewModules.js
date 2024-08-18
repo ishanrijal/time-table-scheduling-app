@@ -3,6 +3,11 @@ import axios from 'axios';
 import DeleteModule from './DeleteModule'; // Assume this is a component you create for module deletion
 import EditModule from './EditModule'; // Component for editing modules
 
+const modeOfDeliveryOptions = [
+  { value: 'online', name: 'Online' },
+  { value: 'physical', name: 'Physical' }
+];
+
 const ViewModules = () => {
   const [modules, setModules] = useState([]);
   const [instructors, setInstructors] = useState([]);
@@ -40,7 +45,7 @@ const ViewModules = () => {
     };
 
     fetchAllData();
-  }, []);
+  }, [editingModule]);
 
   // Function to get the instructor's name by ID
   const getInstructorName = (id) => {
@@ -52,6 +57,12 @@ const ViewModules = () => {
   const getRoomName = (id) => {
     const room = rooms.find(room => room.id === id);
     return room ? room.room_name : 'Unknown';
+  };
+
+  // Function to get the mode of delivery name by value
+  const getModeOfDeliveryName = (value) => {
+    const option = modeOfDeliveryOptions.find(option => option.value === value);
+    return option ? option.name : 'Unknown';
   };
 
   const handleEditClick = (module) => {
@@ -101,7 +112,7 @@ const ViewModules = () => {
                 <td>{getInstructorName(module.instructor)}</td>
                 <td>{getRoomName(module.room)}</td>
                 <td>{module.time_slot}</td>
-                <td>{module.mode_of_delivery}</td>
+                <td>{getModeOfDeliveryName(module.mode_of_delivery)}</td>
                 <td>
                   <button className="button button-edit" onClick={() => handleEditClick(module)}>Edit</button>
                   <DeleteModule moduleId={module.id} className="button button-delete" />

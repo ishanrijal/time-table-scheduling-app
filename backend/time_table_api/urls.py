@@ -6,8 +6,10 @@ from .views import (
     LectureListCreateView, LectureDetailView,
     EventListCreateView, EventDetailView,
     NotificationListCreateView, NotificationDetailView,
-    ConflictListCreateView, ConflictDetailView
+    ConflictListCreateView, ConflictDetailView, LoginView,
+    BatchListCreateView, BatchDetailView, FacultyListCreateView, FacultyDetailView
 )
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     # CustomUser URLs
@@ -37,4 +39,14 @@ urlpatterns = [
     # Conflict URLs
     path('conflicts/', ConflictListCreateView.as_view(), name='conflict-list-create'),
     path('conflicts/<int:pk>/', ConflictDetailView.as_view(), name='conflict-detail'),
+
+    # Login URL
+    path('login/', LoginView.as_view(), name='login'),
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+
+    path('batches/', BatchListCreateView.as_view(), name='batch-list-create'),
+    path('batches/<int:pk>/', BatchDetailView.as_view(), name='batch-detail'),
+    
+    path('faculties/', FacultyListCreateView.as_view(), name='faculty-list-create'),
+    path('faculties/<int:pk>/', FacultyDetailView.as_view(), name='faculty-detail'),
 ]

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import EventForm from './EventForm';
 import EventList from './EventList';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -32,7 +31,6 @@ const Event = () => {
 
   return (
     <>
-      <EventForm addEvent={addEvent} users={users} />
       <EventList events={events} />
     </>
   );

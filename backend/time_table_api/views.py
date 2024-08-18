@@ -1,12 +1,19 @@
-from rest_framework import generics
-from .models import (
-    CustomUser, Classroom, Module,
-    Lecture, Event, Notification, Conflict
-)
-from .serializers import (
-    CustomUserSerializer, ClassroomSerializer, ModuleSerializer,
-    LectureSerializer, EventSerializer, NotificationSerializer, ConflictSerializer
-)
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate, login
+from .models import CustomUser, Classroom, Module, Lecture, Event, Notification, Conflict, Batch, Faculty
+from .serializers import CustomUserSerializer, LoginSerializer, ClassroomSerializer, ModuleSerializer, LectureSerializer, EventSerializer, NotificationSerializer, ConflictSerializer, BatchSerializer, FacultySerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from .serializers import LoginSerializer
+
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
+
 
 # CustomUser Views
 class CustomUserListCreateView(generics.ListCreateAPIView):
@@ -70,3 +77,39 @@ class ConflictListCreateView(generics.ListCreateAPIView):
 class ConflictDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Conflict.objects.all()
     serializer_class = ConflictSerializer
+
+class LoginView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            user_id = user.id
+            user_data = {
+                'id': user_id,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'role': user.role,
+                'batch': user.batch,
+                'faculty': user.faculty,
+            }
+            token=user.email
+
+            return Response({'message': 'Login successful','token':token,'user-info':user_data }, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class BatchListCreateView(generics.ListCreateAPIView):
+    queryset = Batch.objects.all()
+    serializer_class = BatchSerializer
+
+class FacultyListCreateView(generics.ListCreateAPIView):
+    queryset = Faculty.objects.all()
+    serializer_class = FacultySerializer
+
+class BatchDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Batch.objects.all()
+    serializer_class = BatchSerializer
+
+class FacultyDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Faculty.objects.all()
+    serializer_class = FacultySerializer

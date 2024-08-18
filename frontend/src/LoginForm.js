@@ -7,24 +7,30 @@ import microsoftIcon from './assets/icon/microsoft.png';
 import lineIcon from './assets/icon/line.png';
 import eyeOpen from './assets/icon/eye.png';
 import eyeClose from './assets/icon/eye-close.png';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/', {
+      const response = await axios.post('http://127.0.0.1:8000/api/login/', {
         email: email,
         password: password
       });
 
       if (response.status === 200) {
         alert('Logged In Successfully');
-        // Optionally handle token storage or redirection
+        const { token, 'user-info': userInfo } = response.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user-info', JSON.stringify(userInfo));
+
+        navigate('/dashboard/information'); // Redirect to the dashboard on successful login
       }
     } catch (error) {
       console.error('Login failed:', error);

@@ -3,6 +3,14 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils import timezone
 
 # Custom User Manager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
+from django.conf import settings
+from django.db import models
+import binascii
+import os
+
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, role, password=None, batch=None, faculty=None):
         if not email:
@@ -35,7 +43,6 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-# Custom User Model
 class CustomUser(AbstractBaseUser):
     ROLE_CHOICES = [
         ('admin', 'Admin'),
@@ -50,8 +57,8 @@ class CustomUser(AbstractBaseUser):
     created_date = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    batch = models.IntegerField(blank=True, null=True)  # Optional integer field
-    faculty = models.CharField(max_length=100, blank=True, null=True)  # Optional string field
+    batch = models.IntegerField(blank=True, null=True)
+    faculty = models.CharField(max_length=100, blank=True, null=True)
 
     objects = CustomUserManager()
 
@@ -60,7 +67,19 @@ class CustomUser(AbstractBaseUser):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+    
+class Batch(models.Model):
+    year = models.IntegerField(unique=True)
 
+    def __str__(self):
+        return str(self.year)
+
+class Faculty(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+    
 class Classroom(models.Model):
     room_name = models.CharField(max_length=255)
     capacity = models.IntegerField()
@@ -128,6 +147,23 @@ class Conflict(models.Model):
     conflict_type = models.CharField(max_length=10, choices=CONFLICT_TYPE_CHOICES)
     details = models.TextField()
     resolution_status = models.CharField(max_length=10, choices=[('resolved', 'Resolved'), ('pending', 'Pending')])
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='conflicts', blank=True, null=True)
 
     def __str__(self):
         return f"{self.conflict_type} - {self.resolution_status}"
+    
+class CustomToken(models.Model):
+    key = models.CharField(max_length=40, primary_key=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        related_name='custom_auth_token',
+        on_delete=models.CASCADE
+    )
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Custom Token"
+        verbose_name_plural = "Custom Tokens"
+    def generate_key():
+        """Generate a new token key."""
+        return binascii.hexlify(os.urandom(20)).decode()

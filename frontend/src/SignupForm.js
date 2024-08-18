@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import googleIcon from './assets/icon/google.png';
 import facebookIcon from './assets/icon/facebook.png';
@@ -6,7 +6,6 @@ import appleIcon from './assets/icon/apple.png';
 import microsoftIcon from './assets/icon/microsoft.png';
 import lineIcon from './assets/icon/line.png';
 import eyeIcon from './assets/icon/eye.png';
-// import checkIcon from './assets/icon/check.png'; // Add a check icon for matched passwords
 
 const SignupForm = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -17,7 +16,35 @@ const SignupForm = () => {
     const [role, setRole] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [batch, setBatch] = useState(''); // Default to empty initially
+    const [faculty, setFaculty] = useState(''); // Default to empty initially
     const [passwordsMatch, setPasswordsMatch] = useState(false);
+    const [batches, setBatches] = useState([]);
+    const [faculties, setFaculties] = useState([]);
+
+    // Fetch batches and faculties data
+    useEffect(() => {
+        const fetchBatches = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/batches/');
+                setBatches(response.data); // Assuming the data is in the correct format
+            } catch (error) {
+                console.error('Error fetching batches:', error);
+            }
+        };
+
+        const fetchFaculties = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/faculties/');
+                setFaculties(response.data); // Assuming the data is in the correct format
+            } catch (error) {
+                console.error('Error fetching faculties:', error);
+            }
+        };
+
+        fetchBatches();
+        fetchFaculties();
+    }, []); // Empty dependency array means this runs once when the component mounts
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
@@ -34,7 +61,7 @@ const SignupForm = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
 
         if (!passwordsMatch) {
             alert("Passwords do not match.");
@@ -47,6 +74,8 @@ const SignupForm = () => {
             email: email,
             role: role,
             password: password,
+            batch: batch,
+            faculty: faculty
         };
 
         try {
@@ -58,7 +87,7 @@ const SignupForm = () => {
     };
 
     return (
-        <div className="home-right" style={{display:'flex', justifyContent:'center', alignItems:'center'}}> 
+        <div className="home-right" style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
             <div className='signup-container'>
                 <div className="signup-header">
                     <h2>Create an account</h2>
@@ -111,6 +140,7 @@ const SignupForm = () => {
                     </div>
                     <div className='form-field-container'>
                         <label htmlFor="role">Role</label>
+                        <br/>
                         <select 
                             name='role' 
                             id='role' 
@@ -118,9 +148,42 @@ const SignupForm = () => {
                             onChange={(e) => setRole(e.target.value)} 
                             required
                         >
+                            <option value="" disabled>Select Role</option>
                             <option value="admin">Admin</option>
                             <option value="instructor">Instructor</option>
                             <option value="student">Student</option>
+                        </select>
+                    </div>
+                    <div className='form-field-container'>
+                        <label htmlFor="batch">Batch</label>
+                        <br/>
+                        <select 
+                            name='batch' 
+                            id='batch' 
+                            value={batch}
+                            onChange={(e) => setBatch(e.target.value)} 
+                            required
+                        >
+                            <option value="" disabled>Select Batch</option>
+                            {batches.map((batch) => (
+                                <option key={batch.id} value={batch.id}>{batch.year}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className='form-field-container'>
+                        <label htmlFor="faculty">Faculty</label>
+                        <br/>
+                        <select 
+                            name='faculty' 
+                            id='faculty' 
+                            value={faculty}
+                            onChange={(e) => setFaculty(e.target.value)} 
+                            required
+                        >
+                            <option value="" disabled>Select Faculty</option>
+                            {faculties.map((faculty) => (
+                                <option key={faculty.id} value={faculty.id}>{faculty.name}</option>
+                            ))}
                         </select>
                     </div>
                     <div className='form-filed-container'>
@@ -158,11 +221,11 @@ const SignupForm = () => {
                                 onClick={toggleConfirmPasswordVisibility} 
                             />
                         </div>
-                        <p>
-                            {passwordsMatch ? (
-                                <span className="status-text">Passwords Matched</span>
-                            ) : (
-                                <span className="status-text">Passwords do not match</span>
+                        <p style={{marginBottom:'24px'}}>
+                            {confirmPassword && (
+                                confirmPassword !== password 
+                                ? <span className="status-text" style={{color:'red', margin: '16px 0'}}>Passwords Don't Match</span>
+                                : ''
                             )}
                         </p>
                     </div>

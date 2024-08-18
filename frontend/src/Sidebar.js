@@ -1,41 +1,121 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
+  const [userRole, setUserRole] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Retrieve user-info from localStorage
+    const userInfoString = localStorage.getItem('user-info');
+    if (userInfoString) {
+      try {
+        const userInfoObject = JSON.parse(userInfoString);
+        setUserRole(userInfoObject.role);
+      } catch (error) {
+        console.error('Error parsing user-info:', error);
+      }
+    }
+  }, []);
+
+  const handleLogout = (e) =>{
+    e.preventDefault();
+    localStorage.removeItem('user-info')
+    localStorage.removeItem('token');
+    navigate('/'); 
+  }
+
   return (
     <div className="sidebar">
       <ul>
         <li>
-          <Link to="/dashboard/" activeClassName="active">Dashboard</Link>
+          <NavLink
+            to="/dashboard/information"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Dashboard
+          </NavLink>
+        </li>
+        {userRole === 'admin' && (
+          <>
+            <li>
+              <NavLink
+                to="/dashboard/view-classrooms"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
+                Manage Classrooms
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/dashboard/add-classrooms"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
+                Add Classrooms
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/dashboard/view-modules"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
+                Manage Modules
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/dashboard/add-modules"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
+                Add Modules
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/dashboard/add-lecture"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
+                Add Lectures
+              </NavLink>
+            </li>
+          </>
+        )}
+          <li>
+          <NavLink
+            to="/dashboard/view-lecture"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            View Lectures
+          </NavLink>
         </li>
         <li>
-          <Link to="/dashboard/add-event" activeClassName="active">Add Event</Link>
+          <NavLink
+            to="/dashboard/view-conflicts"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            View Conflicts
+          </NavLink>
         </li>
         <li>
-          <Link to="/dashboard/view-events" activeClassName="active">View Events</Link>
+          <NavLink
+            to="/dashboard/add-conflicts"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Add Conflict
+          </NavLink>
         </li>
         <li>
-          <Link to="/dashboard/user-profile" activeClassName="active">User Profile</Link>
-        </li>
-        <li>
-          <Link to="/dashboard/calendar" activeClassName="active">Calendar</Link>
-        </li>
-        <li>
-          <Link to="/dashboard/add-lecture" activeClassName="active">Add Lectures</Link>
-        </li>
-        <li>
-          <Link to="/dashboard/view-classrooms" activeClassName="active">Manage Classrooms</Link>
-        </li>
-        <li>
-          <Link to="/dashboard/add-classrooms" activeClassName="active">Add Classrooms</Link>
-        </li>
-        <li>
-          <Link to="/dashboard/view-modules" activeClassName="active">Manage modules</Link>
-        </li>
-        <li>
-          <Link to="/dashboard/add-modules" activeClassName="active">Add Modules</Link>
+          <NavLink
+            to="/dashboard/calendar"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Calendar
+          </NavLink>
         </li>
       </ul>
+      <div className="logout-container">
+        <button onClick={handleLogout}>Logout</button>
+      </div>
     </div>
   );
 };
