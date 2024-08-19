@@ -52,6 +52,7 @@ const SignupForm = () => {
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/users/', userData);
             console.log('User created successfully:', response.data);
+            
         } catch (error) {
             console.error('Error creating user:', error);
         }
